@@ -1,0 +1,45 @@
+# Stage 1: Build stage
+FROM python:3.10-alpine AS builder
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# install psycopg2 dependencies
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev curl-dev \
+    && apk --no-cache --update add libffi-dev \
+    && pip install --upgrade pip
+
+# Set working directory
+WORKDIR /build
+
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r requirements.txt
+
+# Stage 2: Final stage
+FROM python:3.10-alpine
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Install runtime dependencies
+RUN apk update && apk add libpq curl-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy Python wheels from the build stage
+COPY --from=builder /build/wheels /wheels
+
+# Install Python wheels
+RUN pip install --no-cache /wheels/*
+
+# Copy project files
+COPY backend_entrypoint.sh /app/backend_entrypoint.sh
+COPY . /app
+
+# Run the Django server
+ENTRYPOINT ["/app/backend_entrypoint.sh"]

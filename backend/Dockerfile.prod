@@ -1,0 +1,51 @@
+# Stage 1: Build stage
+FROM python:3.9-alpine AS builder
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    libffi-dev \
+    openssl-dev \
+    cargo
+
+# Set working directory
+WORKDIR /build
+
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r requirements.txt
+
+# Stage 2: Final stage
+FROM python:3.9-alpine
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=yourproject.settings.production
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    libffi \
+    openssl
+
+# Set working directory
+WORKDIR /app
+
+# Copy Python wheels from the build stage
+COPY --from=builder /build/wheels /wheels
+
+# Install Python wheels
+RUN pip install --no-cache /wheels/*
+
+# Copy project files
+COPY . .
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Run the Django server with Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "yourproject.wsgi:application"]

@@ -1,0 +1,15 @@
+FROM node:19-alpine
+# Simple dev image
+WORKDIR /app
+
+# Copy the necessary files
+COPY frontend_entrypoint.sh /app/frontend_entrypoint.sh
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+COPY . /app
+
+# Install dependencies
+RUN npm install
+
+# Set the entry point command
+ENTRYPOINT ["/app/frontend_entrypoint.sh"]

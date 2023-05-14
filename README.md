@@ -1,6 +1,6 @@
-# Django REST Backend with React Frontend Template
+# Django Rest Framework + React
 
-This repository is a template for creating a web application with a Django REST backend and a React frontend. It provides a basic structure
+This repository is a template for creating a web application with a Django REST Framework backend and a React frontend. It provides a basic structure
 and setup to kickstart your project and save you time on the initial configuration.
 
 ## Prerequisites
@@ -13,3 +13,4 @@ Before you begin, ensure that you have the following software installed on your 
 - Node.js
 - Vite
 - npm (Node Package Manager)
+

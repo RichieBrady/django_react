@@ -15,8 +15,9 @@ RUN apk update \
 WORKDIR /build
 
 # Copy and install dependencies
-COPY requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r requirements.txt
+COPY ../requirements/requirements.txt .
+COPY ../requirements/dev_requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r dev_requirements.txt
 
 # Stage 2: Final stage
 FROM python:3.10-alpine
@@ -38,8 +39,8 @@ COPY --from=builder /build/wheels /wheels
 RUN pip install --no-cache /wheels/*
 
 # Copy project files
-COPY backend_entrypoint.sh /app/backend_entrypoint.sh
-COPY . /app
+COPY ../backend_entrypoint.sh /app/backend_entrypoint.sh
+COPY .. /app
 
 # Run the Django server
 ENTRYPOINT ["/app/backend_entrypoint.sh"]

@@ -17,16 +17,16 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfiles/Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
 
   db:
-    image: postgres:13
+    image: postgres:15
     env_file:
-      - ./backend/env/dev.env
+      - ./backend/env/dev.db.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

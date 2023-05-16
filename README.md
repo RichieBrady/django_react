@@ -34,11 +34,10 @@ Before you begin, ensure that you have the following software installed on your 
 - Python 3.x
 - Node.js
 - Vite
-- npm (Node Package Manager)
 
 ### Configuration
 
-**Note ->** See backend/example_env/README.md for instruction on setting up .env files for the django api
+**Note:** See backend/example_env/README.md for instructions on setting up .env files for the django api
 
 You can customize the project configuration by modifying the corresponding configuration files:
 
@@ -46,28 +45,29 @@ You can customize the project configuration by modifying the corresponding confi
     - **docker-compose.dev.yml:** Contains the Docker Compose configuration for the development environment.
     - **backend/Dockerfiles/Dockerfile.dev:** Dockerfile for building the Django backend container in the development environment.
     - **frontend/Dockerfiles/Dockerfile.dev:** Dockerfile for building the React frontend container in the development environment.
+
+
 - **Production Environment:**
     - **docker-compose.prod.yml:** Contains the Docker Compose configuration for the production environment.
     - **backend/Dockerfiles/Dockerfile.prod:** Dockerfile for building the Django backend container in the production environment.
     - **frontend/Dockerfiles/Dockerfile.prod:** Dockerfile for building the React frontend container in the production environment.
+
+
 - **Backend Configuration:**
     - **backend/django_api/settings.py:** Django settings file where you can configure database settings, CORS headers, authentication, and other
       backend-specific configurations.
     - **backend/requirements/requirements.txt:** Base Python dependencies for the backend. You can add or remove packages as per your
-      project
-      requirements.
+      project requirements.
     - **backend/requirements/dev_requirements.txt:** Development Python dependencies for the backend. You can add or remove packages as per
-      your project
-      requirements.
+      your project requirements.
     - **backend/requirements/prod_requirements.txt:** Production Python dependencies for the backend. You can add or remove packages as per
-      your project
-      requirements.
+      your project requirements.
     - **backend/env/dev.env:** Environment variables specific to the backend development configuration. You can configure variables such as
-      API endpoints, authentication
-      settings, or other frontend-specific variables.
+      API endpoints, authentication settings, or other frontend-specific variables.
     - **backend/env/prod.env:** Environment variables specific to the backend production configuration. You can configure variables such as
-      API endpoints, authentication
-      settings, or other frontend-specific variables.
+      API endpoints, authentication settings, or other frontend-specific variables.
+
+
 - **Frontend Configuration:**
     - **frontend/package.json:** Contains the dependencies and scripts for the React frontend. You can add or remove frontend packages,
       update versions, or modify build scripts.
@@ -76,8 +76,9 @@ You can customize the project configuration by modifying the corresponding confi
       as API endpoints, authentication
       settings, or other frontend-specific variables.
     - **frontend/env/prod.env:** Environment variables specific to the frontend production configuration. You can configure variables such
-      as API endpoints, authentication
-      settings, or other frontend-specific variables.
+      as API endpoints, authentication settings, or other frontend-specific variables.
+
+
 - **Nginx Configuration:**
     - **nginx/nginx.conf:** Nginx configuration file for the production environment. You can modify this file to customize Nginx settings,
       such as server ports, SSL configuration, or caching rules.

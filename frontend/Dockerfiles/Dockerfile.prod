@@ -4,9 +4,10 @@ FROM node:19-alpine AS builder
 WORKDIR /app
 
 # Install dependencies
-COPY ../package.json /app
-COPY ../package-lock.json /app
-RUN npm install --production
+COPY ../package.json ../package-lock.json ../vite.config.js /app/
+RUN npm install --production \
+    && npm install -g vite
+
 
 # Copy the source code
 COPY .. /app
@@ -20,14 +21,18 @@ FROM nginx:alpine
 # Copy the built app from the previous stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Remove default Nginx configuration
-RUN rm /etc/nginx/conf.d/default.conf
+RUN apk update \
+    && apk add --no-cache openssl \
+    && rm /etc/nginx/conf.d/default.conf
+
 
 # Copy custom Nginx configuration
-COPY ../nginx/nginx.conf /etc/nginx/conf.d
+COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
+RUN mkdir /etc/nginx/ssl
+COPY --from=builder /app/entrypoint_scripts/prod_frontend_entrypoint.sh ./prod_frontend_entrypoint.sh
 
 # Expose the port
 EXPOSE 80
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Set the entry point command
+ENTRYPOINT ["/prod_frontend_entrypoint.sh"]

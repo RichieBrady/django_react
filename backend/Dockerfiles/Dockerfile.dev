@@ -39,8 +39,8 @@ COPY --from=builder /build/wheels /wheels
 RUN pip install --no-cache /wheels/*
 
 # Copy project files
-COPY backend_entrypoint.sh /app/backend_entrypoint.sh
 COPY .. /app
+RUN chmod +x /app/entrypoint_scripts/dev_backend_entrypoint.sh
 
 # Run the Django server
-ENTRYPOINT ["/app/backend_entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint_scripts/dev_backend_entrypoint.sh"]

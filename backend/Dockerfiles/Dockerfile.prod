@@ -15,16 +15,17 @@ RUN apk update \
 WORKDIR /build
 
 # Copy and install dependencies
+COPY ../requirements/requirements.txt .
 COPY ../requirements/prod_requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r requirements.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r prod_requirements.txt
 
 # Stage 2: Final stage
-FROM python:3.9-alpine
+FROM python:3.10-alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=yourproject.settings.production
+    DJANGO_SETTINGS_MODULE=django_api.settings
 
 # Install runtime dependencies
 RUN apk add --no-cache \
@@ -43,8 +44,5 @@ RUN pip install --no-cache /wheels/*
 # Copy project files
 COPY .. /app
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
 # Run the Django server with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "yourproject.wsgi:application"]
+ENTRYPOINT ["/app/entrypoint_scripts/prod_backend_entrypoint.sh"]

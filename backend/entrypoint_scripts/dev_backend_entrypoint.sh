@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Wait for the PostgreSQL database to be ready
-until nc -z -v -w30 db 5432; do
+until nc -z -v -w30 dev_db 5432; do
   echo 'Waiting for the database connection...'
   sleep 1
 done

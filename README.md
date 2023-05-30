@@ -85,3 +85,50 @@ You can customize the project configuration by modifying the corresponding confi
 
 
 Make sure to rebuild the Docker containers after modifying any configuration files to apply the changes.
+
+### Usage 
+
+
+#### Development Environment
+Install dev dependencies for the django backend. You will need these installed while developing your backend.
+
+
+From project root:
+```shell
+pip install -r ./backend/requirements/dev_requirements.txt
+```
+
+Build the services defined in docker-compose.dev.yml:
+```shell
+docker-compose -f docker-compose.dev.yml build
+```
+
+Start the built services:
+```shell
+docker-compose -f docker-compose.dev.yml up
+```
+
+Check the django backend container is running correctly by opening a browser and go to
+```shell
+0.0.0.0:8000
+```
+You should see a web page with message:
+
+**The install worked successfully! Congratulations!**
+
+To check the frontend container is running correctly check the output in the terminal you ran the up command from.
+You should see output from the dev_frontend container that looks like this.
+```shell
+dev_frontend_1  |   VITE v4.3.7  ready in 231 ms
+dev_frontend_1  | 
+dev_frontend_1  |   ➜  Local:   http://localhost:5173/
+dev_frontend_1  |   ➜  Network: http://172.26.0.3:5173/
+```
+The correct address is the Network address which may be different for you. If the container is running correctly 
+you should see a webpage with the React and Vite logos and button that increments an integer on click.
+
+If everything is running correctly you will be able to make changes to the backend or frontend that will hot reload
+making development smooth.
+
+
+#### Production Environment

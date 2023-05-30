@@ -9,4 +9,8 @@ fi
 
 # Start Nginx
 echo "Starting Nginx..."
+# Fetch the container IP address
+CONTAINER_IP=$(hostname -i)
+# Print the container IP address
+echo "Network: https://$CONTAINER_IP/"
 nginx -g "daemon off;"

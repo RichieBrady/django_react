@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',  # The hostname of the PostgreSQL container
+        'HOST': os.environ.get('POSTGRES_HOST'),  # The hostname of the PostgreSQL container
         'PORT': 5432,  # The port on which PostgreSQL is running
     }
 }

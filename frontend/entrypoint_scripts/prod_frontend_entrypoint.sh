@@ -1,16 +1,11 @@
 #!/bin/sh
 
-# Generate self-signed SSL certificate if not already present
-if [ ! -f /etc/nginx/ssl/certificate.crt ] || [ ! -f /etc/nginx/ssl/private.key ]; then
-  echo "Generating self-signed SSL certificate..."
-  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/private.key -out /etc/nginx/ssl/certificate.crt -subj "/C=US/ST=State/L=City/O=Organization/CN=frontend"
-  echo "Self-signed SSL certificate generated."
+# Check certbot has generatewd the ssl certs and they are available to this service
+if [ ! -f /etc/letsencrypt/live/example.com/privkey.pem ] || [ ! -f /etc/letsencrypt/live/example.com/fullchain.pem ]; then
+  echo "The ssl cert could not be found!"
+  exit
 fi
 
-# Start Nginx
 echo "Starting Nginx..."
-# Fetch the container IP address
-CONTAINER_IP=$(hostname -i)
-# Print the container IP address
-echo "Network: https://$CONTAINER_IP/"
+
 nginx -g "daemon off;"

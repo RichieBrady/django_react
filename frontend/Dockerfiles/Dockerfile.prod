@@ -27,7 +27,7 @@ RUN apk update \
 
 
 # Copy custom Nginx configuration
-COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ../nginx/nginx.production.conf /etc/nginx/nginx.conf
 RUN mkdir /etc/nginx/ssl
 COPY --from=builder /app/entrypoint_scripts/prod_frontend_entrypoint.sh ./prod_frontend_entrypoint.sh
 

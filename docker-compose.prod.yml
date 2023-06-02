@@ -5,37 +5,54 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfiles/Dockerfile.prod
+    image: <your-ecr-repo-url>/backend:<backend-image-tag>
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-region: ""
+        awslogs-group: ""
+        awslogs-stream: ""
     ports:
       - "8000:8000"
     env_file:
       - ./backend/env/prod.env
     volumes:
       - ./backend:/app
-    depends_on:
-      - db
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfiles/Dockerfile.prod
+    image: <your-ecr-repo-url>/frontend:<frontend-image-tag>
     ports:
       - '80:80'
       - '443:443'
-    depends_on:
-      - backend
     logging:
+      driver: "awslogs"
       options:
-        max-size: '10m'
-        max-file: '3'
+        awslogs-region: ""
+        awslogs-group: ""
+        awslogs-stream: ""
     volumes:
       - ./frontend:/app
+      - certbot-conf:/etc/letsencrypt
+    depends_on:
+      - backend
+      - certbot
 
-  db:
-    image: postgres:15
-    env_file:
-      - ./backend/env/prod.env
+
+  certbot:
+    image: certbot/certbot
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - certbot-conf:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@example.com --agree-tos -d example.com
+
+
+  # No db service for production as we will use a PostgresSQL RDS instance.
+  # Instructions on how to set up will be added to the documentation.
 
 volumes:
-  postgres_data:
+  certbot-conf:
+  certbot-www:
+

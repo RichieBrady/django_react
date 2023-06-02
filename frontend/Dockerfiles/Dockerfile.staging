@@ -27,12 +27,12 @@ RUN apk update \
 
 
 # Copy custom Nginx configuration
-COPY ../nginx/nginx.production.conf /etc/nginx/nginx.conf
+COPY ../nginx/nginx.staging.conf /etc/nginx/nginx.conf
 RUN mkdir /etc/nginx/ssl
-COPY --from=builder /app/entrypoint_scripts/prod_frontend_entrypoint.sh ./prod_frontend_entrypoint.sh
+COPY --from=builder /app/entrypoint_scripts/staging_frontend_entrypoint.sh ./staging_frontend_entrypoint.sh
 
 # Expose the port
 EXPOSE 80
 
 # Set the entry point command
-ENTRYPOINT ["/prod_frontend_entrypoint.sh"]
+ENTRYPOINT ["/staging_frontend_entrypoint.sh"]

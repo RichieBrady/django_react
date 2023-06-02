@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  staging_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfiles/Dockerfile.staging
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/env/staging.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - staging_db
+
+  staging_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfiles/Dockerfile.staging
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - staging_backend
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
+    volumes:
+      - ./frontend:/app
+
+  staging_db:
+    image: postgres:15
+    env_file:
+      - ./backend/env/staging.env
+    volumes:
+      - staging_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  staging_postgres_data:

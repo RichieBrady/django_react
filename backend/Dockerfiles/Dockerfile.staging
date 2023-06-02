@@ -1,0 +1,48 @@
+# Stage 1: Build stage
+FROM python:3.10-alpine AS builder
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# install psycopg2 dependencies
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev curl-dev \
+    && apk --no-cache --update add libffi-dev \
+    && pip install --upgrade pip
+
+# Set working directory
+WORKDIR /build
+
+# Copy and install dependencies
+COPY ../requirements/requirements.txt .
+COPY ../requirements/prod_requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir=/build/wheels -r prod_requirements.txt
+
+# Stage 2: Final stage
+FROM python:3.10-alpine
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=django_api.settings
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    libffi \
+    openssl
+
+# Set working directory
+WORKDIR /app
+
+# Copy Python wheels from the build stage
+COPY --from=builder /build/wheels /wheels
+
+# Install Python wheels
+RUN pip install --no-cache /wheels/*
+
+# Copy project files
+COPY .. /app
+
+# Run the Django server with Gunicorn
+ENTRYPOINT ["/app/entrypoint_scripts/staging_backend_entrypoint.sh"]

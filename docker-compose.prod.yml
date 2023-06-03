@@ -49,7 +49,7 @@ services:
     command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@example.com --agree-tos -d example.com
 
 
-  # No db service for production as we will use a PostgresSQL RDS instance.
+  # No db service for production as we will use a PostgreSQL RDS instance.
   # Instructions on how to set up will be added to the documentation.
 
 volumes:

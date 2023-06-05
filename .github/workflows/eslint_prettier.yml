@@ -1,4 +1,4 @@
-name: Lint With Black
+name: ESLint and Prettier
 
 on:
   push:

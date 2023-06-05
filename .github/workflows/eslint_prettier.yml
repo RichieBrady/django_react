@@ -1,0 +1,30 @@
+name: Lint With Black
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint-preview
+
+      - name: Prettier
+        run: npm run prettier-preview
+
+      - name: Print status
+        run: |
+          if [[ ${{ job.status }} == 'failure' ]]; then
+            echo 'ESLint or Prettier check failed.'
+            echo 'Try npm run lint and npm run prettier in frontend root folder'
+            exit 1
+          fi

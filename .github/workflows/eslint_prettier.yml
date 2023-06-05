@@ -1,0 +1,25 @@
+name: ESLint and Prettier
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: ESLint
+        working-directory: ./frontend
+        run: npm run lint-preview
+
+      - name: Prettier
+        working-directory: ./frontend
+        run: npm run prettier-preview

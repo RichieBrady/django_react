@@ -19,17 +19,7 @@ jobs:
       - name: ESLint
         working-directory: ./frontend
         run: npm run lint-preview
-        continue-on-error: true
 
       - name: Prettier
         working-directory: ./frontend
         run: npm run prettier-preview
-        continue-on-error: true
-
-      - name: Print status
-        run: |
-          if [[ ${{ job.status }} == 'failure' ]]; then
-            echo 'ESLint or Prettier check failed.'
-            echo 'Try npm run lint and npm run prettier in frontend root folder'
-            exit 1
-          fi
